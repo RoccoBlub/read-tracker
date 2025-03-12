@@ -1,37 +1,43 @@
-import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { apiReference } from '@scalar/nestjs-api-reference';
-import { AppModule } from '@src/app.module';
+import {NestFactory} from '@nestjs/core';
+import {DocumentBuilder, SwaggerModule} from '@nestjs/swagger';
+import {apiReference} from '@scalar/nestjs-api-reference';
+import {AppModule} from '@src/app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+    const app = await NestFactory.create(AppModule);
 
-  const config = new DocumentBuilder()
-    .setTitle('My API')
-    .setDescription('API documentation')
-    .setVersion('1.0')
-    .addBearerAuth()
-    .build();
+    app.enableCors({
+        origin: 'http://localhost:4000',
+        credentials: true,
+    });
 
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+    const config = new DocumentBuilder()
+        .setTitle('My API')
+        .setDescription('API documentation')
+        .setVersion('1.0')
+        .addBearerAuth()
+        .build();
 
-  const swaggerConfig: any = {
-    spec: {
-      type: 'url',
-      url: '/api-json',
-    },
-    metaData: {
-      title: 'Novel Tracker API',
-    },
-    darkMode: true,
-    hideDarkModeToggle: true,
-  };
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('api', app, document);
 
-  app.use('/docs', apiReference(swaggerConfig));
+    const swaggerConfig: any = {
+        spec: {
+            type: 'url',
+            url: '/api-json',
+        },
+        metaData: {
+            title: 'Novel Tracker API',
+        },
+        darkMode: true,
+        hideDarkModeToggle: true,
+    };
 
-  await app.listen(process.env.PORT ?? 3000);
+    app.use('/docs', apiReference(swaggerConfig));
+
+    await app.listen(process.env.PORT ?? 3000);
 }
+
 bootstrap().catch((err) => {
-  console.error(err);
+    console.error(err);
 });

@@ -1,6 +1,7 @@
 services:
   backend:
     image: node:23
+    container_name: backend
     working_dir: /app
     volumes:
       - ./backend:/app
@@ -15,19 +16,20 @@ services:
       sh -c "apt-get update -y && apt-get install -y openssl && npm install && npm run start:dev"
 
 
-#  frontend:
-#    image: node:23-slim
-#    working_dir: /app
-#    volumes:
-#      - ./frontend:/app
-#    ports:
-#      - "4000:4000"
-#    environment:
-#      - API_BASE_URL=http://backend:3000
-#    depends_on:
-#      - backend
-#    command: >
-#      sh -c "npm install && npm run dev"
+  frontend:
+    image: node:23-slim
+    container_name: frontend
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "4000:4000"
+    environment:
+      - API_BASE_URL=http://backend:3000
+    depends_on:
+      - backend
+    command: >
+      sh -c "npm install && npm run dev"
 
   db:
     image: postgres:latest

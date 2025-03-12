@@ -1,29 +1,26 @@
-import {
-  Collection,
-  Entity,
-  OneToMany,
-  PrimaryKey,
-  Property,
-} from '@mikro-orm/core';
-import { UserTitles } from '@src/users/entities/UserTitlesEntity';
+import {Collection, Entity, OneToMany, PrimaryKey, Property,} from '@mikro-orm/core';
+import {UserTitles} from '@src/users/entities/UserTitlesEntity';
 
 @Entity()
 export class Users {
-  @PrimaryKey()
-  id: number;
+    @PrimaryKey()
+    id: number;
 
-  @Property()
-  email: string;
+    @Property()
+    email: string;
 
-  @Property()
-  name: string;
+    @Property()
+    name: string;
 
-  @OneToMany(() => UserTitles, (userTitles) => userTitles.user)
-  titles = new Collection<UserTitles>(this);
+    @Property()
+    profilePicture: string;
 
-  @Property()
-  createdAt = new Date();
+    @OneToMany(() => UserTitles, (userTitles) => userTitles.user)
+    titles = new Collection<UserTitles>(this);
 
-  @Property({ onUpdate: () => new Date() })
-  updatedAt: Date;
+    @Property()
+    createdAt = new Date();
+
+    @Property({onUpdate: () => new Date()})
+    updatedAt = new Date();
 }
