@@ -14,15 +14,15 @@ export function useAuthUtils() {
 
         try {
             console.log("Getting token now!");
-            const response = await $fetch('/auth/google/callback', {
-                method: 'POST', // ✅ Send `code` via POST
+            const response = await $fetch<{ access_token: string }>('/auth/google/callback', {
+                method: 'POST',
                 baseURL: 'http://localhost:3000',
                 body: { code },
                 credentials: 'include',
             });
 
             if (response.access_token) {
-                tokenCookie.value = response.access_token; // ✅ Store JWT token
+                tokenCookie.value = response.access_token;
             }
         } catch (error) {
             console.error('Google Callback Error:', error);
